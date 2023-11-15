@@ -3,12 +3,12 @@ const DIFF_CONST = 200;
 class Scale {
     torqueLeft;
     torqueRight;
-    absTorqueRight;
-    absTorqueLeft;
     leftLift;
-
     fLeft;
     fRight;
+
+    wLeftPer = 0.8;
+    wRightPer = 0.3;
 
     fulcrum;
 
@@ -21,25 +21,31 @@ class Scale {
     }
     
     get leftXy() {
-        let a = this.leftLift;
-        let c = this.torqueLeft;
-        let b = Math.sqrt(
-            Math.pow(c, 2) - Math.pow(a, 2)
-        );
-
-        return [this.fulcrum[0] - b, this.fulcrum[1] - a];
+        let b = this.getB(this.leftLift, this.torqueLeft);
+        return [this.fulcrum[0] - b, this.fulcrum[1] - this.leftLift];
     }
 
     get rightXy() {
-        let a = this.leftLift;
-        let c = this.torqueRight;
+        let b = this.getB(this.leftLift, this.torqueRight);
+        return [this.fulcrum[0] + b, this.fulcrum[1] + this.leftLift];
+    }
 
+    get wLeftXy() {
+        let b = this.getB(this.leftLift * this.wLeftPer, this.torqueLeft * this.wLeftPer);
+        return [this.fulcrum[0] - b, this.fulcrum[1] - this.leftLift * this.wLeftPer];
+    }
+
+    get wRightXy() {
+        let b = this.getB(this.leftLift * this.wRightPer, this.torqueRight * this.wRightPer);
+        return [this.fulcrum[0] + b, this.fulcrum[1] + this.leftLift * this.wRightPer];
+    }
+
+    getB(a,c) {
         let b = Math.sqrt(
             Math.pow(c, 2) - Math.pow(a, 2)
         );
-        return [this.fulcrum[0] + b, this.fulcrum[1] + a];
+        return b;
     }
-
 
     draw(ctx) {
 
@@ -56,6 +62,9 @@ class Scale {
         ctx.fillRect(...this.leftXy, 5,5);
         ctx.fillRect(...this.rightXy, 5,5);
 
+        ctx.fillStyle = 'red';
+        ctx.fillRect(...this.wLeftXy, 5,5);
+        ctx.fillRect(...this.wRightXy, 5,5);
 
         ctx.font = '15px monospace';
         ctx.fillText(`${this.torqueLeft * this.fLeft}`, ...this.leftXy);
