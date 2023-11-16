@@ -4,20 +4,52 @@ class Scale {
     torqueLeft;
     torqueRight;
     leftLift;
-    fLeft;
-    fRight;
 
-    wLeftPer = 0.8;
-    wRightPer = 0.3;
+    wLeftPer;
+    wRightPer;
 
     fulcrum;
 
-    getFRight() {
-        return this.torqueLeft * this.fLeft / this.torqueRight;
+    fLeft_;
+    fRight_;
+
+    pushLeft;
+    pushRight;
+
+
+    constructor() {
+        this.wLeftPer = 1;
+        this.wRightPer = 1;
+        this.pushLeft=0;
+        this.pushRight=0        
+    }
+
+    set fLeft(v) {
+        this.fLeft_ = v;
+    }
+
+    get fLeft() {
+        return this.fLeft_ * this.wLeftPer;
+    }
+
+    set fRight(v) {
+        this.fRight_ = v;
+    }
+
+    get fRight() {
+        return this.fRight_ * this.wRightPer;
+    }
+
+    get wLeft() {
+        return this.torqueLeft * this.fLeft + this.pushLeft;
+    }
+
+    get wRight() {
+        return this.torqueRight * this.fRight + this.pushRight;
     }
 
     get fDiff() { // how much more power on the left side => add to the left y
-        return this.torqueLeft * this.fLeft - this.torqueRight * this.fRight;
+        return this.wLeft - this.wRight;
     }
     
     get leftXy() {
@@ -59,28 +91,70 @@ class Scale {
         ctx.lineTo(...this.rightXy);
         ctx.stroke();
 
-        ctx.fillRect(...this.leftXy, 5,5);
-        ctx.fillRect(...this.rightXy, 5,5);
+        ctx.fillRect(...this.leftXy, 7,7);
+        ctx.fillRect(...this.rightXy, 7,7 );
 
         ctx.fillStyle = 'red';
         ctx.fillRect(...this.wLeftXy, 5,5);
         ctx.fillRect(...this.wRightXy, 5,5);
 
         ctx.font = '15px monospace';
-        ctx.fillText(`${this.torqueLeft * this.fLeft}`, ...this.leftXy);
-        ctx.fillText(`${this.torqueRight * this.fRight}`, ...this.rightXy);
+        ctx.fillText(`${Math.floor(this.wLeft)}`, ...this.wLeftXy);
+        ctx.fillText(`${Math.floor(this.wRight)}`, ...this.wRightXy);
 
+        ctx.font = '12px monospace';
+        ctx.fillStyle = 'black'
+        ctx.fillText(`${Math.floor(this.fLeft * this.torqueLeft)} + ${this.pushLeft}`, this.wLeftXy[0], this.leftXy[1]+20);
+        ctx.fillText(`${Math.floor(this.fRight * this.torqueRight)} + ${this.pushRight}`, this.wRightXy[0], this.wRightXy[1]+20);
+
+
+        ctx.fillStyle = 'pink';
+        ctx.fillText(`${Math.floor(this.fDiff)}`, this.fulcrum[0], this.fulcrum[1] + 20);
     }
+
+    behave() {
+        this.setLift();
+        // this.wLeftPer = this.wLeftPer * 0.95;
+    }
+
+    setLift() {
+        this.leftLift = -1 * this.fDiff * 0.01;
+    }
+}
+
+class Rope {
+    scale1;
+    scale2;
+
+    constructor(scale1, scale2) {
+        this.scale1 = scale1;
+        this.scale2 = scale2;
+    }
+
+    execute() {
+        this.scale2.pushLeft = - this.scale1.fDiff;
+    }
+
 }
 
 let s = new Scale();
 s.torqueLeft = 100;
 s.torqueRight = 100;
-s.leftLift = 1;
 
-s.fulcrum = [200,200];
-s.fLeft = 100;
-s.fRight = 50;
+s.fulcrum = [200,150];
+s.fLeft = 110;
+s.fRight = 100;
+
+let s2 = new Scale();
+s2.torqueLeft = 100;
+s2.torqueRight = 120;
+
+s2.fulcrum = [400,300];
+s2.fLeft = 5;
+s2.fRight = 5;
+s2.pushLeft = 0;
+
+let rope = new Rope(s, s2);
 
 const loop = (ctx) => () => {
 
@@ -100,11 +174,13 @@ const loop = (ctx) => () => {
     ctx.lineTo(300, 400);
     ctx.stroke();
  
-
-
+    rope.execute();
     s.draw(ctx);
-    s.leftLift+=3;
+    s2.draw(ctx);
+    s.behave();
+    s2.behave();
 
+    s.pushLeft+=100;
 };
 
 const main = () => {
