@@ -51,6 +51,10 @@ class Scale {
     get fDiff() { // how much more power on the left side => add to the left y
         return this.wLeft - this.wRight;
     }
+
+    get fDiffRatio() {
+        return this.wLeft / this.wRight;
+    }
     
     get leftXy() {
         let b = this.getB(this.leftLift, this.torqueLeft);
@@ -110,15 +114,18 @@ class Scale {
 
         ctx.fillStyle = 'pink';
         ctx.fillText(`${Math.floor(this.fDiff)}`, this.fulcrum[0], this.fulcrum[1] + 20);
+        ctx.fillText(`${Math.floor(this.fDiffRatio*100)/100}`, this.fulcrum[0], this.fulcrum[1] + 30);
+        ctx.fillText(`${Math.floor(this.leftLift)}`, this.fulcrum[0], this.fulcrum[1] + 50);
     }
 
     behave() {
         this.setLift();
-        // this.wLeftPer = this.wLeftPer * 0.95;
+        this.wLeftPer = this.wLeftPer * 0.95;
     }
 
     setLift() {
-        this.leftLift = -1 * this.fDiff * 0.01;
+        const LIFT_CONTANT = -25;
+        this.leftLift = LIFT_CONTANT * (this.fDiffRatio - 1)
     }
 }
 
@@ -151,7 +158,7 @@ s2.torqueRight = 120;
 
 s2.fulcrum = [400,300];
 s2.fLeft = 5;
-s2.fRight = 5;
+s2.fRight = 6;
 s2.pushLeft = 0;
 
 let rope = new Rope(s, s2);
@@ -174,13 +181,13 @@ const loop = (ctx) => () => {
     ctx.lineTo(300, 400);
     ctx.stroke();
  
-    rope.execute();
+    // rope.execute();
     s.draw(ctx);
     s2.draw(ctx);
     s.behave();
     s2.behave();
 
-    s.pushLeft+=100;
+    // s.pushLeft+=100;
 };
 
 const main = () => {
