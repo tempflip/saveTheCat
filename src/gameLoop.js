@@ -1,15 +1,18 @@
+import {CollisioDetection} from './objects.js';
 export class GameLoop {
 
     ctx;
     scales;
     ropes;
+    objects;
 
     keysPressed = [];
 
-    constructor(ctx, scales, ropes) {
+    constructor(ctx, scales, ropes, objects) {
         this.ctx = ctx;
         this.scales = scales;
         this.ropes = ropes;
+        this.objects = objects;
         console.log('$$$$', this);
     }
 
@@ -17,7 +20,7 @@ export class GameLoop {
         this.keysPressed.push(ev.code);
     }
 
-    loop(ev) {
+    loop(frameTime) {
         // console.log('ev', this);
         this.ctx.fillStyle = 'white';
         this.ctx.fillRect(0, 0, 640, 400);
@@ -35,15 +38,13 @@ export class GameLoop {
         // ctx.stroke();
 
 
-        this.scales.forEach(s => {
+        [...this.scales, ...this.ropes, ...this.objects].forEach(s => {
             s.draw(this.ctx);
-            s.behave();
-        });
-        this.ropes.forEach(r => {
-            r.draw(this.ctx);
-            r.execute();
+            s.execute(frameTime);
         });
 
+        let cDet = new CollisioDetection(this.objects);
+        cDet.getCollisions();
         // s.draw(ctx);
         // s2.draw(ctx);
         // rope.draw(ctx);
@@ -55,8 +56,7 @@ export class GameLoop {
         if (this.keysPressed.length > 0) {
             console.log('.');
             // this.scales[0].pushLeft += 100;
-            this.scales[0].pushRight += 100;
-            this.scales[1].pushLeft += 100;
+            this.scales[0].pushLeft += 100;
             this.keysPressed = [];
 
         }

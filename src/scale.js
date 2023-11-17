@@ -121,13 +121,13 @@ export class Scale {
         ctx.fillText(`leftLift ${Math.floor(this.leftLift)}`, this.fulcrum[0], this.fulcrum[1] + 50);
     }
 
-    behave() {
+    execute() {
         this.setLift();
         // this.wLeftPer = this.wLeftPer * 0.95;
     }
 
     setLift() {
-        const LIFT_CONTANT = 100;
+        const LIFT_CONTANT = -100;
         this.leftLift = LIFT_CONTANT * (this.fDiffRatio)
     }
 }
