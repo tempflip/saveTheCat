@@ -30,7 +30,11 @@ const main = () => {
     let ball = new Ball([30, 30]);
     ball.vVector = [2,3];
 
-    let platform1 = new Platform([200, 400], 400, 20);
+
+    let ball2 = new Ball([200, 40]);
+    ball2.vVector = [2,3];
+
+    let platform1 = new Platform([100, 200], 400, 20);
 
     const canvas = document.querySelector('#can');
     const ctx = canvas.getContext('2d');
@@ -38,7 +42,7 @@ const main = () => {
     let gameLoop = new GameLoop(ctx, 
                 [s, s2], 
                 [rope],
-                [platform1, ball]
+                [platform1, ball, ball2]
                 );
 
     document.addEventListener('keydown', (ev) => {

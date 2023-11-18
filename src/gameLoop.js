@@ -1,4 +1,4 @@
-import {CollisioDetection} from './objects.js';
+import {CollisionDetection} from './collision.js';
 export class GameLoop {
 
     ctx;
@@ -25,33 +25,17 @@ export class GameLoop {
         this.ctx.fillStyle = 'white';
         this.ctx.fillRect(0, 0, 640, 400);
 
-        // ctx.strokeStyle = 'black';
-        // ctx.lineWidth = 2;
-        // ctx.beginPath();
-        // ctx.moveTo(100, 0);
-        // ctx.lineTo(100, 400);
-        // ctx.stroke();
-
-        // ctx.beginPath();
-        // ctx.moveTo(300, 0);
-        // ctx.lineTo(300, 400);
-        // ctx.stroke();
-
-
         [...this.scales, ...this.ropes, ...this.objects].forEach(s => {
             s.draw(this.ctx);
             s.execute(frameTime);
         });
 
-        let cDet = new CollisioDetection(this.objects);
-        cDet.getCollisions();
-        // s.draw(ctx);
-        // s2.draw(ctx);
-        // rope.draw(ctx);
+        let cDet = new CollisionDetection(this.objects);
+        let collisions = cDet.getCollisions();
 
-        // rope.execute();
-        // s.behave();
-        // s2.behave();
+        console.log('collisions', collisions.length);
+        collisions.forEach(c => {c.execute()});
+
 
         if (this.keysPressed.length > 0) {
             console.log('.');
