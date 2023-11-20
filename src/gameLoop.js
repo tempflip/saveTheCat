@@ -1,4 +1,4 @@
-import {CollisionDetection} from './collision.js';
+import { CollisionDetection } from './collision.js';
 export class GameLoop {
 
     ctx;
@@ -7,6 +7,7 @@ export class GameLoop {
     objects;
 
     keysPressed = [];
+    interval;
 
     constructor(ctx, scales, ropes, objects) {
         this.ctx = ctx;
@@ -18,6 +19,10 @@ export class GameLoop {
 
     registerKey(ev) {
         this.keysPressed.push(ev.code);
+    }
+
+    passInterval(interval) {
+        this.interval = interval;
     }
 
     loop(frameTime) {
@@ -33,14 +38,18 @@ export class GameLoop {
         let cDet = new CollisionDetection(this.objects);
         let collisions = cDet.getCollisions();
 
-        console.log('collisions', collisions.length);
-        collisions.forEach(c => {c.execute()});
+        collisions.forEach((c, i) => {
+            console.log('c:', i, c);
+            c.execute()
+        });
 
 
         if (this.keysPressed.length > 0) {
-            console.log('.');
-            // this.scales[0].pushLeft += 100;
-            this.scales[0].pushLeft += 100;
+            global
+            if (this.scales.length > 0) {
+                this.scales[0].pushLeft += 100;
+            }
+            clearInterval(this.interval);
             this.keysPressed = [];
 
         }
