@@ -35,24 +35,39 @@ export class CollisionDetection {
         let yEnd2 = yStart2 + o2.height;
 
         let xCollide = false;
+        let xCollide1 = false; // for log
+        let xCollide2 = false;
         if (xEnd1 > xStart2 && xEnd1 < xEnd2) {
             xCollide = true;
+            xCollide1 = true;
         }
         if (xEnd2 > xStart1 && xEnd2 < xEnd1) {
             xCollide = true;
+            xCollide2 = true;
         }
 
         let yCollide = false;
+        let yCollide1 = false; // for log
+        let yCollide2 = false;
+
         if (yEnd1 > yStart2 && yEnd1 < yEnd2) {
             yCollide = true;
+            xCollide1 = true;
         }
         if (yEnd2 > yStart1 && yEnd2 < yEnd1) {
             yCollide = true;
+            xCollide2 = true;
         }
 
         // console.log(xCollide, yCollide);
         if (yCollide && xCollide) {
-            return new Collision([o1, o2])
+            console.log('which', xCollide1, xCollide2, xCollide1, xCollide2);
+            return new Collision([o1, o2],
+                [xStart1, yStart1],
+                [xStart2, yStart2],
+                [xEnd1, yEnd1],
+                [xEnd2, yEnd2]
+            )
         }
         return undefined;
     }
@@ -82,8 +97,16 @@ export class CollisionDetection {
 
 export class Collision {
     objList;
-    constructor(objList) {
+    start1;
+    start2;
+    end1;
+    end2;
+    constructor(objList, start1, start2, end1, end2) {
         this.objList = objList;
+        this.start1 = start1;
+        this.start2 = start2;
+        this.end1 = end1;
+        this.end2 = end2;
     }
 
     execute() {

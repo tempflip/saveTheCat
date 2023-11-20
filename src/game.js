@@ -28,20 +28,21 @@ const main = () => {
     rope.s2Left = true;
 
     let ball = new Ball([30, 30]);
-    ball.vVector = [2, 3];
+    ball.vVector = [0, 0];
 
     let ball2 = new Ball([100, 100]);
     ball2.vVector = [3, 3];
 
-    let platBended1 = new PlatformBended([50, 40], [200, 190]);
-    let platBended2 = new PlatformBended([100, 200], [400, 270]);
+    // let platBended1 = new PlatformBended([100, 100], [200, 170]);
+    let platBended1 = new PlatformBended([100, 100], [200, 200]);
+    let platBended2 = new PlatformBended([200, 250], [400, 270]);
 
-    let platform1 = new Platform([200, 330], 400, 20);
-    let platformStop1 = new PlatformStop([200, 300], 20, 30);
+    let platform1 = new Platform([1, 330], 630, 20);
+    let platformStop1 = new PlatformStop([1, 300], 20, 30);
     let platformStop2 = new PlatformStop([580, 300], 20, 30);
 
 
-    let cat = new Cat([100, 10]);
+    let cat = new Cat([100, 0]);
     cat.vVector = [0, 10];
 
     const canvas = document.querySelector('#can');
@@ -55,7 +56,7 @@ const main = () => {
         [cat,
 
 
-         platBended2, 
+         platBended1,platBended2,
          platform1, platformStop1, platformStop2
         ]
 

@@ -58,6 +58,11 @@ export class Cat extends AnyObject {
     draw(ctx) {
         ctx.fillStyle = 'green';
         ctx.fillRect(...this.pos, this.width, this.height);
+
+        ctx.font = '12px monospace';
+        ctx.fillStyle = 'black'
+        ctx.fillText(`${Math.floor(this.pos[0])}, ${Math.floor(this.pos[1])}`, ...this.pos);
+
     }
 
     afterCollision(otherObject) {
@@ -130,13 +135,26 @@ export class PlatformBended extends Platform {
         ctx.moveTo(...this.pos);
         ctx.lineTo(...this.posEnd);
         ctx.stroke();
+
+        ctx.font = '12px monospace';
+        ctx.fillStyle = 'black'
+        ctx.fillText(`${Math.floor(this.pos[0])}, ${Math.floor(this.pos[1])}`, ...this.pos);
+        ctx.fillText(`${this.width}, ${this.height}`, this.pos[0], this.pos[1]);
+        ctx.fillText(`${Math.floor(this.posEnd[0])}, ${Math.floor(this.posEnd[1])}`, ...this.posEnd);
+
     }
 
     getPos(obj) {
+        if (obj.pos[0] > this.pos[0] + this.width) return this.pos;
+
         let [objPosX, objPosy] = obj.pos;
         let xRelativToMe = objPosX - this.pos[0];
-        if (xRelativToMe < 0 || xRelativToMe > this.width) return this.pos;
+        if (xRelativToMe < 0 || xRelativToMe) {
+            console.log('out of!');
+            return this.pos;
+        }
         let addToY = Math.floor(this.height * xRelativToMe / this.width);
+        console.log('addToY', addToY);
         return [this.pos[0], this.pos[1] + addToY];
     }
 }
