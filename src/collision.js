@@ -15,6 +15,7 @@ export class CollisionDetection {
                 if (i == j) continue;
                 // comparedAlready.push(key);
                 let myCollision = this.compare2(this.objList[i], this.objList[j]);
+                // console.log('c',myCollision);
                 if (myCollision) {
                     collisions.push(myCollision);
                 }
@@ -61,7 +62,7 @@ export class CollisionDetection {
 
         // console.log(xCollide, yCollide);
         if (yCollide && xCollide) {
-            console.log('which', xCollide1, xCollide2, xCollide1, xCollide2);
+            // console.log('which', xCollide1, xCollide2, xCollide1, xCollide2);
             return new Collision([o1, o2],
                 [xStart1, yStart1],
                 [xStart2, yStart2],
@@ -74,7 +75,7 @@ export class CollisionDetection {
 
     cleanDuplicateCollisions(collisions) {
         if (collisions.length == 0) return collisions;
-        console.log('collision!');
+        // console.log('collision!');
 
         if (collisions.length > 0) {
             let firstEqSecond = collisions[0].objList[0].id == collisions[1].objList[1].id;

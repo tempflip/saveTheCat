@@ -39,7 +39,7 @@ export class GameLoop {
         let collisions = cDet.getCollisions();
 
         collisions.forEach((c, i) => {
-            console.log('c:', i, c);
+            // console.log('c:', i, c);
             c.execute()
         });
 

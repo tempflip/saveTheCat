@@ -1,7 +1,7 @@
 import { Scale } from './scale.js';
 import { Rope } from './rope.js';
 import { GameLoop } from './gameLoop.js';
-import { Ball, Platform, PlatformStop, PlatformBended, Cat } from './objects.js';
+import { Ball, Platform, PlatformStop, PlatformBended, PlatformBendedOther, Cat } from './objects.js';
 
 const FRAMETIME = 50;
 
@@ -34,15 +34,15 @@ const main = () => {
     ball2.vVector = [3, 3];
 
     // let platBended1 = new PlatformBended([100, 100], [200, 170]);
-    let platBended1 = new PlatformBended([100, 100], [200, 200]);
-    let platBended2 = new PlatformBended([200, 250], [400, 270]);
+    let platBended1 = new PlatformBendedOther([200, 40], [500, 150]);
+    let platBended2 = new PlatformBended([40, 170], [500, 300]);
 
     let platform1 = new Platform([1, 330], 630, 20);
     let platformStop1 = new PlatformStop([1, 300], 20, 30);
     let platformStop2 = new PlatformStop([580, 300], 20, 30);
 
 
-    let cat = new Cat([100, 0]);
+    let cat = new Cat([400, 10]);
     cat.vVector = [0, 10];
 
     const canvas = document.querySelector('#can');
@@ -56,8 +56,8 @@ const main = () => {
         [cat,
 
 
-         platBended1,platBended2,
-         platform1, platformStop1, platformStop2
+            platBended1, platBended2
+        //  platform1, platformStop1, platformStop2
         ]
 
     );

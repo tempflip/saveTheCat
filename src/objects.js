@@ -70,9 +70,14 @@ export class Cat extends AnyObject {
 
         if (otherObject instanceof Platform) {
             if (otherObject instanceof PlatformBended) {
+                let V = 3;
                 let VProp = otherObject.height / otherObject.width;
-                let V = 7;
-                this.vVector = [V, V*VProp];
+                this.vVector = [V, V * VProp];
+
+                if (otherObject instanceof PlatformBendedOther) {
+                    this.vVector = [V*-1, V * VProp];                    
+                }
+
             } else {
                 this.pos[1] -= 1;
                 this.vVector = [5, 0];
@@ -117,12 +122,18 @@ export class PlatformStop extends AnyObject {
 
 export class PlatformBended extends Platform {
     posEnd;
+    isOther = false;
+
 
     constructor([x1, y1], [x2, y2]) {
         super([x1, y1]);
         this.posEnd = [x2, y2];
         this.width = this.posEnd[0] - this.pos[0];
         this.height = this.posEnd[1] - this.pos[1];
+    }
+
+    get getIsDown() {
+        return this.posEnd[1] > this.pos[1];
     }
 
     draw(ctx) {
@@ -132,30 +143,49 @@ export class PlatformBended extends Platform {
         ctx.strokeStyle = 'blue';
 
         ctx.beginPath();
-        ctx.moveTo(...this.pos);
-        ctx.lineTo(...this.posEnd);
+
+        if (!this.isOther) {
+            ctx.moveTo(...this.pos);
+            ctx.lineTo(...this.posEnd);
+        } else {
+            ctx.strokeStyle = 'red';
+            ctx.moveTo(this.pos[0], this.posEnd[1]);
+            ctx.lineTo(this.posEnd[0], this.pos[1]);
+        }
         ctx.stroke();
 
         ctx.font = '12px monospace';
         ctx.fillStyle = 'black'
         ctx.fillText(`${Math.floor(this.pos[0])}, ${Math.floor(this.pos[1])}`, ...this.pos);
-        ctx.fillText(`${this.width}, ${this.height}`, this.pos[0], this.pos[1]);
+        ctx.fillText(`${this.width}, ${this.height}`, this.pos[0], this.pos[1]+20);
         ctx.fillText(`${Math.floor(this.posEnd[0])}, ${Math.floor(this.posEnd[1])}`, ...this.posEnd);
 
     }
 
     getPos(obj) {
         if (obj.pos[0] > this.pos[0] + this.width) return this.pos;
-
         let [objPosX, objPosy] = obj.pos;
         let xRelativToMe = objPosX - this.pos[0];
-        if (xRelativToMe < 0 || xRelativToMe) {
-            console.log('out of!');
+        if (xRelativToMe < 0) {// || xRelativToMe) {
             return this.pos;
         }
+        if (this.isOther) xRelativToMe = this.width-xRelativToMe;
+
         let addToY = Math.floor(this.height * xRelativToMe / this.width);
+
+        // if (!this.getIsDown()) addToY *= -1;
+
         console.log('addToY', addToY);
         return [this.pos[0], this.pos[1] + addToY];
+    }
+
+}
+
+export class PlatformBendedOther extends PlatformBended {
+    constructor([x1, y1], [x2, y2]) {
+        super([x1, y1], [x2, y2]);
+        this.isOther = true;
+
     }
 }
 
