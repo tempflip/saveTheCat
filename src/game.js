@@ -31,19 +31,21 @@ const main = () => {
     ball.vVector = [0, 0];
 
     let ball2 = new Ball([100, 100]);
-    ball2.vVector = [3, 3];
+    ball2.vVector = [1, 1];
 
     // let platBended1 = new PlatformBended([100, 100], [200, 170]);
-    let platBended1 = new PlatformBendedOther([200, 40], [500, 150]);
-    let platBended2 = new PlatformBended([40, 170], [500, 300]);
+    // let platBended1 = new PlatformBendedOther([200, 40], [500, 150]);
+    // let platBended2 = new PlatformBended([40, 170], [500, 300]);
 
-    let platform1 = new Platform([1, 330], 630, 20);
-    let platformStop1 = new PlatformStop([1, 300], 20, 30);
-    let platformStop2 = new PlatformStop([580, 300], 20, 30);
+    // let platformStop1 = new PlatformStop([1, 300], 20, 30);
+    // let platformStop2 = new PlatformStop([580, 300], 20, 30);
 
+    //////////////////////////////////////////////
 
-    let cat = new Cat([400, 10]);
-    cat.vVector = [0, 10];
+    let platform1 = new Platform([100, 300], 150, 20);
+    let platform2 = new Platform([250, 400], 150, 20);
+    let myBall = new Ball([100, 200]);
+    myBall.vVector = [4, -5];
 
     const canvas = document.querySelector('#can');
     const ctx = canvas.getContext('2d');
@@ -53,11 +55,8 @@ const main = () => {
     let gameLoop = new GameLoop(ctx,
         [],// [s, s2],
         [], // [rope],platBended2
-        [cat,
-
-
-            platBended1, platBended2
-        //  platform1, platformStop1, platformStop2
+        [myBall,
+        platform1,platform2
         ]
 
     );

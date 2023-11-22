@@ -1,3 +1,5 @@
+const BASICSPEED = 20;
+const GRAVITY = BASICSPEED / 2;
 class AnyObject {
     pos;
     vVector;
@@ -12,18 +14,45 @@ class AnyObject {
     }
 
     execute(frameTime) {
+        this.updatePosition(frameTime);
+        this.updateV(frameTime);
+    }
+
+    
+    updatePosition(frameTime) {
         let s = 1000 / frameTime;
-        this.pos[0] += this.vVector[0];
-        this.pos[1] += this.vVector[1];
+        this.pos[0] += this.vVector[0] * (BASICSPEED / s);
+        this.pos[1] += this.vVector[1] * (BASICSPEED / s);
+    }
+
+    updateV(frameTime) {
     }
 
     afterCollision(otherObject) {
-        // console.log('its a collision!');
     }
 
     getPos(obj) {
         return this.pos;
     }
+
+    ballPlatformBendedCollision(otherObject) {
+        let V = 3;
+        let VProp = otherObject.height / otherObject.width;
+        this.vVector = [V, V * VProp];
+
+        if (otherObject instanceof PlatformBendedOther) {
+            this.vVector = [V * -1, V * VProp];
+        }
+    }
+
+    ballPlatformCollision(otherObject) {
+        this.vVector[1] = 0;
+    }
+
+    ballPlaformStopCollision(otherObject) {
+        this.vVector[0] = this.vVector[0] * -1;
+    }
+
 
 }
 
@@ -45,6 +74,27 @@ export class Ball extends AnyObject {
         ctx.stroke();
         ctx.fill();
     }
+
+    updateV(frameTime) {
+        let s = 1000 / frameTime;
+        this.vVector[1] += GRAVITY / s;
+    }
+
+    afterCollision(otherObject) {
+        if (otherObject instanceof Platform) {
+            if (otherObject instanceof PlatformBended) {
+                this.ballPlatformBendedCollision(otherObject);
+            } else {
+                this.ballPlatformCollision(otherObject)
+            }
+        }
+
+        if (otherObject instanceof PlatformStop) {
+            this.plaformStopCollision(otherObject)
+        }
+    }
+
+
 }
 
 export class Cat extends AnyObject {
@@ -70,27 +120,27 @@ export class Cat extends AnyObject {
 
         if (otherObject instanceof Platform) {
             if (otherObject instanceof PlatformBended) {
-                let V = 3;
-                let VProp = otherObject.height / otherObject.width;
-                this.vVector = [V, V * VProp];
+                this.ballPlatformBendedCollision(otherObject);
 
-                if (otherObject instanceof PlatformBendedOther) {
-                    this.vVector = [V*-1, V * VProp];                    
-                }
+                // let V = 3;
+                // let VProp = otherObject.height / otherObject.width;
+                // this.vVector = [V, V * VProp];
+
+                // if (otherObject instanceof PlatformBendedOther) {
+                //     // this.vVector = [V * -1, V * VProp];
+                // }
 
             } else {
-                this.pos[1] -= 1;
-                this.vVector = [5, 0];
+                this.ballPlatformCollision(otherObject)
+                // this.pos[1] -= 1;
+                // this.vVector = [5, 0];
             }
         }
 
         if (otherObject instanceof PlatformStop) {
-            // alert('x');
-            this.vVector[0] = this.vVector[0] * -1;
-            console.log('change v', this.vVector);
-            // this.pos[0] -= 20;
+            this.plaformStopCollision(otherObject)
+            // this.vVector[0] = this.vVector[0] * -1;
         }
-
     }
 }
 
@@ -157,7 +207,7 @@ export class PlatformBended extends Platform {
         ctx.font = '12px monospace';
         ctx.fillStyle = 'black'
         ctx.fillText(`${Math.floor(this.pos[0])}, ${Math.floor(this.pos[1])}`, ...this.pos);
-        ctx.fillText(`${this.width}, ${this.height}`, this.pos[0], this.pos[1]+20);
+        ctx.fillText(`${this.width}, ${this.height}`, this.pos[0], this.pos[1] + 20);
         ctx.fillText(`${Math.floor(this.posEnd[0])}, ${Math.floor(this.posEnd[1])}`, ...this.posEnd);
 
     }
@@ -169,7 +219,7 @@ export class PlatformBended extends Platform {
         if (xRelativToMe < 0) {// || xRelativToMe) {
             return this.pos;
         }
-        if (this.isOther) xRelativToMe = this.width-xRelativToMe;
+        if (this.isOther) xRelativToMe = this.width - xRelativToMe;
 
         let addToY = Math.floor(this.height * xRelativToMe / this.width);
 

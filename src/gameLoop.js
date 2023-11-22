@@ -28,7 +28,7 @@ export class GameLoop {
     loop(frameTime) {
         // console.log('ev', this);
         this.ctx.fillStyle = 'white';
-        this.ctx.fillRect(0, 0, 640, 400);
+        this.ctx.fillRect(0, 0, 640, 480);
 
         [...this.scales, ...this.ropes, ...this.objects].forEach(s => {
             s.draw(this.ctx);
@@ -39,7 +39,7 @@ export class GameLoop {
         let collisions = cDet.getCollisions();
 
         collisions.forEach((c, i) => {
-            // console.log('c:', i, c);
+            console.log('c:', i, c);
             c.execute()
         });
 
