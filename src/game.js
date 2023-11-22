@@ -28,7 +28,7 @@ const main = () => {
     rope.s2Left = true;
 
     let ball = new Ball([30, 30]);
-    ball.vVector = [0, 0];
+    ball.vVector = [0, 3];
 
     let ball2 = new Ball([100, 100]);
     ball2.vVector = [1, 1];
@@ -44,8 +44,10 @@ const main = () => {
 
     let platform1 = new Platform([100, 300], 150, 20);
     let platform2 = new Platform([250, 400], 150, 20);
-    let myBall = new Ball([100, 200]);
-    myBall.vVector = [4, -5];
+
+    let platform3 = new Platform([25, 440], 10, 10);
+    let myBall = new Ball([150, 100]);
+    myBall.vVector = [0, 0];
 
     const canvas = document.querySelector('#can');
     const ctx = canvas.getContext('2d');
@@ -56,13 +58,17 @@ const main = () => {
         [],// [s, s2],
         [], // [rope],platBended2
         [myBall,
-        platform1,platform2
+        platform1,platform2,platform3
         ]
 
     );
 
     document.addEventListener('keydown', (ev) => {
-        gameLoop.registerKey(ev);
+        gameLoop.registerKey(ev, true);
+    });
+
+    document.addEventListener('keyup', (ev) => {
+        gameLoop.registerKey(ev, false);
     });
 
 

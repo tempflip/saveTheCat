@@ -7,7 +7,11 @@ export class GameLoop {
     objects;
 
     keysPressed = [];
+    keysUp = [];
     interval;
+
+    spaceDown = false;
+    spacePushedTime = 0;
 
     constructor(ctx, scales, ropes, objects) {
         this.ctx = ctx;
@@ -17,10 +21,13 @@ export class GameLoop {
         console.log('$$$$', this);
     }
 
-    registerKey(ev) {
-        this.keysPressed.push(ev.code);
+    registerKey(ev, isDown) {
+        if (isDown) {
+            this.keysPressed.push(ev.code);
+        } else {
+            this.keysUp.push(ev.code);
+        }
     }
-
     passInterval(interval) {
         this.interval = interval;
     }
@@ -39,21 +46,34 @@ export class GameLoop {
         let collisions = cDet.getCollisions();
 
         collisions.forEach((c, i) => {
-            console.log('c:', i, c);
+            // console.log('c', c);
             c.execute()
         });
 
 
         if (this.keysPressed.length > 0) {
-            global
-            if (this.scales.length > 0) {
-                this.scales[0].pushLeft += 100;
+            if (this.keysPressed.pop() == 'Space') {
+                this.spaceDown = true;
             }
-            clearInterval(this.interval);
             this.keysPressed = [];
-
         }
 
-        // s.pushLeft += 10;
+        if(this.keysUp.length > 0) {
+            if (this.keysUp.pop() == 'Space') {
+                this.spaceDown = false;
+                this.setStartV();                
+            }
+            this.keysUp = [];
+        }
+
+        if(this.spaceDown) {
+            this.spacePushedTime+= frameTime;
+            console.log('collected v', this.spacePushedTime);
+        }
+    }
+
+    setStartV() {
+        this.objects[0].vVector = [2, Math.floor(this.spacePushedTime / -100 )];
+        console.log(this.objects[0].vVector);
     }
 }

@@ -46,12 +46,16 @@ class AnyObject {
     }
 
     ballPlatformCollision(otherObject) {
-        this.vVector[1] = 0;
+        console.log(JSON.stringify(this.vVector));
+        console.log(this.vVector);
+        this.vVector[1] = this.vVector[1] * -0.5 -10;
     }
 
     ballPlaformStopCollision(otherObject) {
         this.vVector[0] = this.vVector[0] * -1;
     }
+
+    _secretDebug() {}    
 
 
 }
@@ -92,6 +96,10 @@ export class Ball extends AnyObject {
         if (otherObject instanceof PlatformStop) {
             this.plaformStopCollision(otherObject)
         }
+    }
+
+    _secretDebug() {
+        console.log('s', this.vVector);
     }
 
 

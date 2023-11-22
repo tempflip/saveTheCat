@@ -123,8 +123,7 @@ export class Collision {
         });
         if (moving == null) return;
 
-        moving.vVector[1] = 0;
-
+        console.log(moving._secretDebug());
         moving.afterCollision(notMoving);
         notMoving.afterCollision(moving);
     }
