@@ -46,9 +46,14 @@ class AnyObject {
     }
 
     ballPlatformCollision(otherObject) {
-        console.log(JSON.stringify(this.vVector));
-        console.log(this.vVector);
-        this.vVector[1] = this.vVector[1] * -0.5 -10;
+        console.log('before', this.vVector);
+        if (Math.abs(this.vVector[1]) > 5) {
+            this.vVector[1] = this.vVector[1] * -0.7;
+        } else {
+            this.vVector[1] =0;
+        }
+        console.log('after', this.vVector);
+
     }
 
     ballPlaformStopCollision(otherObject) {
@@ -99,7 +104,7 @@ export class Ball extends AnyObject {
     }
 
     _secretDebug() {
-        console.log('s', this.vVector);
+        // console.log('s', this.vVector);
     }
 
 
@@ -233,7 +238,7 @@ export class PlatformBended extends Platform {
 
         // if (!this.getIsDown()) addToY *= -1;
 
-        console.log('addToY', addToY);
+        // console.log('addToY', addToY);
         return [this.pos[0], this.pos[1] + addToY];
     }
 

@@ -81,14 +81,24 @@ export class CollisionDetection {
             let firstEqSecond = collisions[0].objList[0].id == collisions[1].objList[1].id;
             let secondEqFirst = collisions[0].objList[1].id == collisions[1].objList[0].id;
             // console.log('ids', firstEqSecond, secondEqFirst);
-            if (collisions[0].objList[0] instanceof PlatformStop
-                || collisions[0].objList[1] instanceof PlatformStop) {
+            if (
+                
+                (
+                collisions[0].objList[0] instanceof PlatformStop
+                || collisions[0].objList[1] instanceof PlatformStop
+                )
+                ||
+                collisions[0].objList[0] instanceof Platform
+                || collisions[0].objList[1] instanceof Platform
+
+                
+                ){
 
 
                 // console.log('PlatformStop collisions', collisions.length);
                 // console.log('PlatformStop collisions:', collisions);
                 collisions.pop();
-
+                console.log('x');
             }
 
         }
