@@ -18,11 +18,15 @@ class AnyObject {
         this.updateV(frameTime);
     }
 
-    
     updatePosition(frameTime) {
         let s = 1000 / frameTime;
         this.pos[0] += this.vVector[0] * (BASICSPEED / s);
         this.pos[1] += this.vVector[1] * (BASICSPEED / s);
+    }
+
+    updateGravity(frameTime) {
+        let s = 1000 / frameTime;
+        this.vVector[1] += GRAVITY / s;
     }
 
     updateV(frameTime) {
@@ -46,13 +50,12 @@ class AnyObject {
     }
 
     ballPlatformCollision(otherObject) {
-        console.log('before', this.vVector);
+        // console.log('ballPlatformCollision');
         if (Math.abs(this.vVector[1]) > 5) {
             this.vVector[1] = this.vVector[1] * -0.7;
         } else {
             this.vVector[1] =0;
         }
-        console.log('after', this.vVector);
 
     }
 
@@ -85,8 +88,7 @@ export class Ball extends AnyObject {
     }
 
     updateV(frameTime) {
-        let s = 1000 / frameTime;
-        this.vVector[1] += GRAVITY / s;
+        this.updateGravity(frameTime);
     }
 
     afterCollision(otherObject) {
@@ -128,31 +130,27 @@ export class Cat extends AnyObject {
 
     }
 
+    updateV(frameTime) {
+        this.updateGravity(frameTime);
+    }
+
     afterCollision(otherObject) {
         // console.log('CAT COLLIDE!');
+
+        if (otherObject instanceof Ball) {
+            console.log('$$$$$$$$ BALL COLLIDE!');
+        }
 
         if (otherObject instanceof Platform) {
             if (otherObject instanceof PlatformBended) {
                 this.ballPlatformBendedCollision(otherObject);
-
-                // let V = 3;
-                // let VProp = otherObject.height / otherObject.width;
-                // this.vVector = [V, V * VProp];
-
-                // if (otherObject instanceof PlatformBendedOther) {
-                //     // this.vVector = [V * -1, V * VProp];
-                // }
-
             } else {
                 this.ballPlatformCollision(otherObject)
-                // this.pos[1] -= 1;
-                // this.vVector = [5, 0];
             }
         }
 
         if (otherObject instanceof PlatformStop) {
             this.plaformStopCollision(otherObject)
-            // this.vVector[0] = this.vVector[0] * -1;
         }
     }
 }

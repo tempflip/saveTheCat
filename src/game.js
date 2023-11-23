@@ -7,32 +7,27 @@ const FRAMETIME = 50;
 
 const main = () => {
 
-    let s = new Scale();
-    s.torqueLeft = 100;
-    s.torqueRight = 100;
+    // let s = new Scale();
+    // s.torqueLeft = 100;
+    // s.torqueRight = 100;
 
-    s.fulcrum = [200, 150];
-    s.fLeft = 10;
-    s.fRight = 10;
+    // s.fulcrum = [200, 150];
+    // s.fLeft = 10;
+    // s.fRight = 10;
 
-    let s2 = new Scale();
-    s2.torqueLeft = 100;
-    s2.torqueRight = 100;
+    // let s2 = new Scale();
+    // s2.torqueLeft = 100;
+    // s2.torqueRight = 100;
 
-    s2.fulcrum = [400, 300];
-    s2.fLeft = 20;
-    s2.fRight = 20;
+    // s2.fulcrum = [400, 300];
+    // s2.fLeft = 20;
+    // s2.fRight = 20;
 
-    let rope = new Rope(s, s2);
-    rope.s1Left = false;
-    rope.s2Left = true;
+    // let rope = new Rope(s, s2);
+    // rope.s1Left = false;
+    // rope.s2Left = true;
 
-    let ball = new Ball([30, 30]);
-    ball.vVector = [0, 3];
-
-    let ball2 = new Ball([100, 100]);
-    ball2.vVector = [1, 1];
-
+    
     // let platBended1 = new PlatformBended([100, 100], [200, 170]);
     // let platBended1 = new PlatformBendedOther([200, 40], [500, 150]);
     // let platBended2 = new PlatformBended([40, 170], [500, 300]);
@@ -42,12 +37,15 @@ const main = () => {
 
     //////////////////////////////////////////////
 
-    let platform1 = new Platform([100, 300], 150, 20);
-    let platform2 = new Platform([250, 400], 150, 20);
+    let platform1 = new Platform([100, 150], 150, 20);
+    let platform2 = new Platform([250, 200], 300, 20);
 
     let platform3 = new Platform([25, 440], 10, 10);
-    let myBall = new Ball([150, 100]);
-    myBall.vVector = [0, 0];
+    let myBall = new Ball([50, 10]);
+    myBall.vVector = [3, 0];
+
+    let myCat = new Cat([500, 150]);
+
 
     const canvas = document.querySelector('#can');
     const ctx = canvas.getContext('2d');
@@ -58,7 +56,8 @@ const main = () => {
         [],// [s, s2],
         [], // [rope],platBended2
         [myBall,
-        platform1,platform2,platform3
+        platform1,platform2,platform3,
+        myCat
         ]
 
     );

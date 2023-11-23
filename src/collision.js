@@ -98,7 +98,6 @@ export class CollisionDetection {
                 // console.log('PlatformStop collisions', collisions.length);
                 // console.log('PlatformStop collisions:', collisions);
                 collisions.pop();
-                console.log('x');
             }
 
         }
@@ -121,6 +120,7 @@ export class Collision {
     }
 
     execute() {
+        /*
         let moving;
         let notMoving;
 
@@ -133,9 +133,12 @@ export class Collision {
         });
         if (moving == null) return;
 
-        console.log(moving._secretDebug());
         moving.afterCollision(notMoving);
         notMoving.afterCollision(moving);
+        */
+
+        this.objList[0].afterCollision(this.objList[1]);
+        this.objList[1].afterCollision(this.objList[0]);
     }
 
 
