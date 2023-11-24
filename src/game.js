@@ -1,12 +1,11 @@
-import { Scale } from './scale.js';
-import { Rope } from './rope.js';
-import { GameLoop } from './gameLoop.js';
-import { Ball, Platform, PlatformStop, PlatformBended, PlatformBendedOther, Cat } from './objects.js';
-
-const FRAMETIME = 50;
-
+// import { Scale } from './scale.js';
+// import { Rope } from './rope.js';
+import { StartScreen } from './levels/startScreen.js';
+import {FRAMETIME} from './constants.js';
+console.log('FRAMETIME', FRAMETIME);
 const main = () => {
 
+    
     // let s = new Scale();
     // s.torqueLeft = 100;
     // s.torqueRight = 100;
@@ -37,30 +36,13 @@ const main = () => {
 
     //////////////////////////////////////////////
 
-    let platform1 = new Platform([100, 150], 150, 20);
-    let platform2 = new Platform([250, 200], 300, 20);
-
-    let platform3 = new Platform([25, 440], 10, 10);
-    let myBall = new Ball([50, 10]);
-    myBall.vVector = [3, 0];
-
-    let myCat = new Cat([500, 150]);
 
 
     const canvas = document.querySelector('#can');
     const ctx = canvas.getContext('2d');
+    
 
-
-    // /platBended1
-    let gameLoop = new GameLoop(ctx,
-        [],// [s, s2],
-        [], // [rope],platBended2
-        [myBall,
-        platform1,platform2,platform3,
-        myCat
-        ]
-
-    );
+    let gameLoop = new StartScreen(ctx);
 
     document.addEventListener('keydown', (ev) => {
         gameLoop.registerKey(ev, true);
@@ -70,9 +52,16 @@ const main = () => {
         gameLoop.registerKey(ev, false);
     });
 
+    document.addEventListener('lostgame', (ev) => {
+        gameLoop.gameLost();
+    });
+
 
     let interval = setInterval(() => { gameLoop.loop(FRAMETIME) }, FRAMETIME);
     gameLoop.passInterval(interval);
 
 }
 main();
+
+
+

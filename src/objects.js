@@ -64,8 +64,6 @@ class AnyObject {
     }
 
     _secretDebug() {}    
-
-
 }
 
 export class Ball extends AnyObject {
@@ -138,7 +136,8 @@ export class Cat extends AnyObject {
         // console.log('CAT COLLIDE!');
 
         if (otherObject instanceof Ball) {
-            console.log('$$$$$$$$ BALL COLLIDE!');
+            let event = new Event('lostgame');
+            document.dispatchEvent(event);        
         }
 
         if (otherObject instanceof Platform) {
@@ -220,7 +219,6 @@ export class PlatformBended extends Platform {
         ctx.fillText(`${Math.floor(this.pos[0])}, ${Math.floor(this.pos[1])}`, ...this.pos);
         ctx.fillText(`${this.width}, ${this.height}`, this.pos[0], this.pos[1] + 20);
         ctx.fillText(`${Math.floor(this.posEnd[0])}, ${Math.floor(this.posEnd[1])}`, ...this.posEnd);
-
     }
 
     getPos(obj) {
