@@ -1,5 +1,9 @@
 import { CollisionDetection } from './collision.js';
-import {FRAMETIME} from './constants.js';
+import { FRAMETIME } from './constants.js';
+// import { GameOverScreen } from './levels/gameOverScreen.js';
+
+
+
 
 export class GameLoop {
 
@@ -10,21 +14,59 @@ export class GameLoop {
 
     keysPressed = [];
     keysUp = [];
+    events = [];
+
     interval;
+    listener;
 
     spaceDown = false;
     spacePushedTime = 0;
-    nextLevel;
 
-    constructor(ctx) {
+    constructor(ctx, listener) {
+        console.log('lll', listener);
         this.ctx = ctx;
+        this.listener = listener;
+        this.listener.addListening(this);
+        this.listener.resetKeys();
         this.constructLevel();
+        // this.addEventListeners();
+        // this.addEventListeners(false);
         console.log('$$$$', this);
     }
 
     constructLevel() {
         console.log('looks i dont have a level constructLevel!');
     }
+
+
+    // addEventListeners(add = true) {
+
+        // const fRegisterKeyDown = (ev) => {
+        //     this.registerKey(ev, true);
+        // }
+
+        // const fRegisterKeyUp = (ev) => {
+        //     this.registerKey(ev, false);
+        // }
+
+        // if (add == true) {
+        //     document.addEventListener('keydown', fRegisterKeyDown);
+        //     document.addEventListener('keyup', fRegisterKeyUp);
+        // } else {
+        //     // document.removeEventListener('keydown', fRegisterKeyDown);
+        //     // document.removeEventListener('keyup', fRegisterKeyUp);
+        // }
+
+    // }
+
+    // fRegisterKeyDown(ev) {
+    // this.registerKey(ev, true);
+    // }
+
+    // fRegisterKeyUp(ev) {
+    // this.registerKey(ev, false);
+    // }
+
 
     registerKey(ev, isDown) {
         if (isDown) {
@@ -62,59 +104,39 @@ export class GameLoop {
             this.keysPressed = [];
         }
 
-        if(this.keysUp.length > 0) {
+        if (this.keysUp.length > 0) {
             if (this.keysUp.pop() == 'Space') {
                 this.spaceDown = false;
-                this.setStartV();                
+                this.setStartV();
             }
             this.keysUp = [];
         }
 
-        if(this.spaceDown) {
-            this.spacePushedTime+= frameTime;
+        if (this.spaceDown) {
+            this.spacePushedTime += frameTime;
             console.log('collected v', this.spacePushedTime);
         }
 
-    }
-
-    gameOverLoop(frameTime) {
-        this.ctx.fillStyle = 'black';
-        this.ctx.fillRect(0, 0, 640, 480);
-
-        this.ctx.font = '64px monospace';
-        this.ctx.fillStyle = 'pink';
-        this.ctx.fillText('Game Over', 100, 200);
-
-        this.ctx.font = '23px monospace';
-        this.ctx.fillText('Press Space for restart', 100, 250);
-
-        if (this.keysPressed.length > 0) {
-            if (this.keysPressed.pop() == 'Space') {
-                this.spaceDown = true;
-                clearInterval(this.interval);
-
-                this.constructLevel();
-                this.interval = setInterval(() => { this.loop(FRAMETIME) }, FRAMETIME);
-
-            }
-            this.keysPressed = [];
+        if (this.events.includes('lostgame')) {
+            console.log('im lost!');
+            this.events = [];
+            this.lostgame();
         }
 
     }
 
     setStartV() {
-        this.objects[0].vVector = [2, Math.floor(this.spacePushedTime / -100 )];
+        this.objects[0].vVector = [2, Math.floor(this.spacePushedTime / -100)];
         console.log(this.objects[0].vVector);
     }
 
-    gameLost() {
-        clearInterval(this.interval);
-        this.interval = setInterval(() => { this.gameOverLoop(FRAMETIME) }, FRAMETIME);
+    lostgame() { 
     }
 
-    startNextLevel() {
-        console.log('startNextLevel ! ', this.nextLevel);
+    startNextLevel(level) {
+        console.log('startNextLevel ! ', level);
         clearInterval(this.interval);
-        this.interval = setInterval(() => { this.nextLevel.loop(FRAMETIME) }, FRAMETIME);
+        let newInterval = setInterval(() => { level.loop(FRAMETIME) }, FRAMETIME);
+        level.passInterval(newInterval);
     }
 }
